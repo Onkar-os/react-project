@@ -24,76 +24,117 @@ function App() {
 
     <>
 
-<header style={{width:"1300px"}}>
-    <nav class="navbar navbar-expand-lg  navbar bg-primary w-100" >
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">  🛒 MyStore</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <Link class="nav-link active" aria-current="page" to="Home">Home</Link>
-        </li>
-        <li class="nav-item">
-          <Link class="nav-link active" aria-current="page" to="allproducts">Getallproducts</Link>
-        </li>
-         <li class="nav-item">
-          <Link class="nav-link active" aria-current="page" to="add">addproducts</Link>
-        </li>
-        <li class="nav-item">
-          <Link class="nav-link" to="weather">GetWeather</Link>
-        </li>
-        {/* <li class="nav-item">
-          <Link class="nav-link" to="allbooks">getallbooks</Link>
-        </li> */}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Category 
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><Link class="dropdown-item" to="/Electronics">Electronics</Link></li>
-            <li><Link class="dropdown-item" to="/Fashion">Fashion</Link></li>
-            <li><Link class="dropdown-item" to="/Clothing">Clothing</Link></li>
-            <li><hr class="dropdown-divider"></hr></li>
-            
-            <li><Link class="dropdown-item" to="/Home Appliances">Home appliances</Link></li>
-            <li><Link class="dropdown-item" to="/others">other products</Link></li>
-          </ul>
-        </li>
-         <li class="nav-item">
-          <Link class="nav-link" to="/login">Login</Link>
-        </li>
-           <li class="nav-item">
-          <Link class="nav-link" to="/register">Register</Link>
-        </li>
-        {/* <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></hr></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li> */}
-       
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+<header style={{ width: "100%", position: "fixed", top: 0, left: 0, zIndex: 1000 }}>
+  <nav className="navbar navbar-expand-lg navbar-dark bg-primary w-100">
+    <div className="container-fluid">
+      <a className="navbar-brand text-white" href="#">
+        🛒 MyStore
+      </a>
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon"></span>
+      </button>
+
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <li className="nav-item">
+            <Link className="nav-link active text-white" to="/Home">
+              Home
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link text-white" to="/allproducts">
+              Getallproducts
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link text-white" to="/add">
+              Addproducts
+            </Link>
+          </li>
+
+          <li className="nav-item dropdown">
+            <a
+              className="nav-link dropdown-toggle text-white"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Category
+            </a>
+            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <Link className="dropdown-item" to="/Electronics">
+                  Electronics
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/Fashion">
+                  Fashion
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/Clothing">
+                  Clothing
+                </Link>
+              </li>
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/Home Appliances">
+                  Home appliances
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/others">
+                  Other products
+                </Link>
+              </li>
+            </ul>
+          </li>
+
+          <li className="nav-item">
+            <Link className="nav-link text-white" to="/login">
+              Login
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link text-white" to="/register">
+              Register
+            </Link>
+          </li>
+        </ul>
+
+        <form className="d-flex" role="search">
+          <input
+            className="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button className="btn btn-outline-light" type="submit">
+            Search
+          </button>
+        </form>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 </header>
 
     <Routes>
       <Route path='allproducts' element={<Getallproducts></Getallproducts>}></Route>
       <Route path='add' element={<Addproduct></Addproduct>}></Route>
-      <Route path='weather' element={<GetWeather></GetWeather>}></Route>
+      {/* <Route path='weather' element={<GetWeather></GetWeather>}></Route> */}
       {/* <Route path="allbooks" element={<GetallBook></GetallBook>}></Route> */}
       <Route path='editproduct/:id' element={<EditProduct></EditProduct>}></Route>
       <Route path='/:category' element={<GetproductBycategory></GetproductBycategory>}></Route>
@@ -118,7 +159,7 @@ function App() {
 
       </Routes> */}
 
-      <footer>
+      <footer style={{ width: "100%", position: "", bottom: 0, right: 0, zIndex: 1000}}>
         <div className='bg-primary' style={{height:'100px'}}>
         <p>© 2025 MY STORE </p>
         </div>

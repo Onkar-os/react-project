@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 function GetproductBycategory() {
     const [formData,setformData]=useState([])
 
     const {category}=useParams()
+      const navigate=useNavigate()
     const apiurl="http://localhost:3000"
 
     useEffect(()=>{
@@ -19,6 +21,9 @@ function GetproductBycategory() {
     } catch (error) {
       console.error("Error fetching products:", error);
     }
+    }
+    function login(){
+      navigate("/login")
     }
   return (
     <>
@@ -57,8 +62,11 @@ function GetproductBycategory() {
                     <h6 className="fw-bold text-success mb-3">
                      ₹{e.price.toLocaleString()}
                     </h6>
-                    <button className="btn btn-primary rounded-pill px-4">
+                    <button className="btn btn-primary rounded-pill px-4" onClick={login}>
                       Buy Now
+                    </button>
+                     <button className="btn btn-secondary rounded-pill px-4" onClick={login}>
+                      ADD TO CART
                     </button>
                   </div>
                 </div>

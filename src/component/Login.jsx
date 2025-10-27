@@ -46,9 +46,12 @@ function Login() {
       }
     }
   }
-
+   
+  function register(){
+    navigate("/register")
+  }
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className="container  d-flex justify-content-center align-items-center vh-100">
       <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "15px" }}>
         <h3 className="text-center mb-4 text-primary fw-bold">EzBuy Login</h3>
 
@@ -88,6 +91,7 @@ function Login() {
           <button type="submit" className="btn btn-primary w-100 fw-semibold mt-2">
             Login
           </button>
+          <button type='button' className='btn btn-secondary w-100 fw-semibold mt-2' onClick={register}>Register</button>
         </form>
       </div>
     </div>
