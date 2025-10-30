@@ -1,0 +1,90 @@
+/* ===== Amazon Style ===== */
+
+/* Title Gradient */
+.text-amazon {
+  font-size: 2rem;
+  background: linear-gradient(90deg, #232f3e, #febd69);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Card styling */
+.amazon-card {
+  background: #fff;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+}
+
+.amazon-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid #febd69;
+}
+
+/* Image Container */
+.image-container {
+  overflow: hidden;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 240px;
+  border-bottom: 1px solid #eee;
+}
+
+.image-container img {
+  max-height: 230px;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.amazon-card:hover img {
+  transform: scale(1.08);
+}
+
+/* Product Name */
+.product-name {
+  color: #232f3e;
+  font-size: 1rem;
+  line-height: 1.2rem;
+  height: 2.4rem;
+  overflow: hidden;
+}
+
+/* Buttons */
+.btn-warning {
+  background-color: #febd69 !important;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-warning:hover {
+  background-color: #f3a847 !important;
+  box-shadow: 0 3px 10px rgba(254, 189, 105, 0.5);
+}
+
+.btn-outline-dark {
+  border: 2px solid #232f3e;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-dark:hover {
+  background-color: #232f3e;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(35, 47, 62, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .image-container {
+    height: 180px;
+  }
+
+  .product-name {
+    font-size: 0.9rem;
+  }
+}

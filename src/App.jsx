@@ -3,19 +3,16 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { Link, Route,Routes } from "react-router-dom";
-import Post from './component/Post';
-import Comment from './component/comment';
-import Album from './component/Album';
-import Photos from './component/Photos';
-import AddPost from './component/AddPost';
-import Getallproducts from './component/Getallproducts';
+import ProtectedRoute from './component/ProtectedRoute'
+import Getallproducts from './component/Home';
 import Addproduct from './component/Addproduct';
-import GetWeather from './component/GetWeather';
-import GetallBook from './component/GetallBook';
+import Addtocart from './component/Addtocart';
 import EditProduct from './component/EditProduct';
 import GetproductBycategory from './component/GetproductBycategory';
 import Login from './component/Login';
 import Register from './component/Register';
+import Home from './component/Home';
+import ProductDetails from './component/ProductDetails';
 
 
 function App() {
@@ -45,15 +42,15 @@ function App() {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
           <li className="nav-item">
-            <Link className="nav-link active text-white" to="/Home">
+            <Link className="nav-link active text-white" to="/allproducts">
               Home
             </Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link className="nav-link text-white" to="/allproducts">
               Getallproducts
             </Link>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Link className="nav-link text-white" to="/add">
               Addproducts
@@ -113,6 +110,11 @@ function App() {
               Register
             </Link>
           </li>
+           <li className="nav-item">
+            <Link className="nav-link text-white" to="/addtocart">
+              Add to cart
+            </Link>
+          </li>
         </ul>
 
         <form className="d-flex" role="search">
@@ -132,14 +134,20 @@ function App() {
 </header>
 
     <Routes>
-      <Route path='allproducts' element={<Getallproducts></Getallproducts>}></Route>
-      <Route path='add' element={<Addproduct></Addproduct>}></Route>
+      {/* <Route path='allproducts' element={<Getallproducts></Getallproducts>}></Route> */}
+      <Route path='allproducts' element={<Home></Home>}></Route>
+      <Route path='add' element={
+        <ProtectedRoute><Addproduct></Addproduct></ProtectedRoute>
+        }></Route>
       {/* <Route path='weather' element={<GetWeather></GetWeather>}></Route> */}
       {/* <Route path="allbooks" element={<GetallBook></GetallBook>}></Route> */}
-      <Route path='editproduct/:id' element={<EditProduct></EditProduct>}></Route>
+      {/* <Route path='editproduct/:id' element={<EditProduct></EditProduct>}></Route> */}
       <Route path='/:category' element={<GetproductBycategory></GetproductBycategory>}></Route>
       <Route path='/login' element={<Login></Login>}></Route>
       <Route path='/register' element={<Register></Register>}></Route>
+      <Route path="/addtocart/:id" element={<Addtocart></Addtocart>} />
+      <Route path="/product/:id" element={<ProductDetails></ProductDetails>} />
+
     </Routes>
 
 

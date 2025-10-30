@@ -1,35 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import './External.css'
-import { Navigate, useNavigate } from 'react-router-dom'
+import React from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
-function Getallproducts() {
-  const apiurl = "http://localhost:3000"
-  const [data, setData] = useState([])
-  const navigate=useNavigate()
-  
+function Addtocart() {
+  const { id } = useParams();
+  const { state } = useLocation();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
+ 
 
-  async function fetchProducts() {
-    try {
-      const res = await axios.get(apiurl)
-      console.log(res.data.allProducts)
-      setData(res.data.allProducts)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  async function Handledelete(obj) {
+   async function addtocart(obj) {
     await axios.delete(`${apiurl}/${obj._id}`).then((res)=>{
       alert("record deleted successfully")
     })
     setData(data.filter((e)=>e._id!==obj._id))
     
   }
+
 
   return (
     <div className="container mt-4 ">
@@ -48,15 +34,14 @@ function Getallproducts() {
                   </h5>
                 <h5 className="card-title">₹{e.price}</h5>
                 <p className="card-text">{e.description}</p>
-                <a href="#" className="btn btn-danger" onClick={()=>navigate(`/editproduct/${e._id}`)}> Edit </a>&nbsp;&nbsp;
-               <a href="#" className="btn btn-primary" onClick={()=>{if(window.confirm("are u suree u want to delete record"))Handledelete(e)}}> Delete </a>
+                
               </div>
             </div>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default Getallproducts
+export default Addtocart;
