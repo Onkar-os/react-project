@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ setIsLoggedIn }) {
   const [formData, setFormData] = useState({
     name: "",
     password: ""
@@ -11,7 +11,6 @@ function Login() {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
-
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,35 +22,41 @@ function Login() {
     setIsError(false);
 
     try {
-    
-     const res = await axios.post("http://localhost:3000/api/Login/login", formData);
+      const res = await axios.post("http://localhost:3000/api/Login/login", formData);
 
-      
-      
       setMessage(res.data.message);
       console.log("Login successful:", res.data);
 
-      
+      // 🔥 Save login status
+      localStorage.setItem("isLoggedIn", "true");
+
+      // 🔥 Update global login state in App.jsx
+      if (setIsLoggedIn) {
+        setIsLoggedIn(true);
+      }
+
+      // 🔥 Redirect after successful login
       setTimeout(() => {
-          navigate('/allproducts');
-      }, 1500); 
+        navigate('/allproducts');
+      }, 1000);
 
     } catch (error) {
       setIsError(true);
+
       if (error.response) {
-    
         setMessage(error.response.data.message);
       } else {
         setMessage("Server error, please try again.");
       }
     }
   }
-   
-  function register(){
-    navigate("/register")
+
+  function register() {
+    navigate("/register");
   }
+
   return (
-    <div className="container  d-flex justify-content-center align-items-center vh-100">
+    <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "15px" }}>
         <h3 className="text-center mb-4 text-primary fw-bold">EzBuy Login</h3>
 
@@ -62,6 +67,7 @@ function Login() {
         )}
 
         <form onSubmit={handleSubmit}>
+
           <div className="mb-3">
             <label className="form-label fw-semibold">Username</label>
             <input
@@ -91,7 +97,15 @@ function Login() {
           <button type="submit" className="btn btn-primary w-100 fw-semibold mt-2">
             Login
           </button>
-          <button type='button' className='btn btn-secondary w-100 fw-semibold mt-2' onClick={register}>Register</button>
+
+          <button
+            type="button"
+            className="btn btn-secondary w-100 fw-semibold mt-2"
+            onClick={register}
+          >
+            Register
+          </button>
+
         </form>
       </div>
     </div>

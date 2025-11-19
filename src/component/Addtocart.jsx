@@ -1,45 +1,116 @@
-import React from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function Addtocart() {
-  const { id } = useParams();
-  const { state } = useLocation();
-  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
 
- 
+  const apiUrl = "http://localhost:3000/cart";
 
-   async function addtocart(obj) {
-    await axios.delete(`${apiurl}/${obj._id}`).then((res)=>{
-      alert("record deleted successfully")
-    })
-    setData(data.filter((e)=>e._id!==obj._id))
-    
-  }
+  // FETCH CART ITEMS
+  const fetchCart = async () => {
+    try {
+      const { data } = await axios.get(apiUrl);
+      setCartItems(data.items); // ✅ match backend response key
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  // UPDATE QUANTITY
+  const updateQuantity = async (id, qty) => {
+    if (qty < 1) return; // prevent quantity < 1
+
+    try {
+      await axios.put(`http://localhost:3000/cart/update/${id}`, { quantity: qty }); // ✅ fixed route
+      fetchCart(); // refresh cart after update
+    } catch (error) {
+      console.error("Quantity update failed:", error);
+    }
+  };
+
+  // REMOVE ITEM
+  const removeItem = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/cart/delete/${id}`); // ✅ fixed route
+      setCartItems((prev) => prev.filter((item) => item._id !== id));
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
+
+  // CALCULATE TOTAL PRICE
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + (item.product?.price || 0) * item.quantity,
+    0
+  );
 
   return (
-    <div className="container mt-4 ">
-      <div className="row bg-Dark" >
-        {data.map((e, index) => (
-          <div className="col-md-4 mb-4 " key={index}>
-            <div className="card h-100 shadow-sm ">
-              <img
-                src={e.image || "https://via.placeholder.com/150"}
-                className="card-img-top"
-                alt={e.name}
-              />
-              <div className="card-body text-center ">
-                <h5 className="card-title text-center fw-semibold text-dark">
-                    {e.pname}
-                  </h5>
-                <h5 className="card-title">₹{e.price}</h5>
-                <p className="card-text">{e.description}</p>
-                
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="container mt-4">
+      <h3 className="text-center mb-4">🛒 Your Cart ({cartItems.length})</h3>
+
+      {cartItems.length === 0 ? (
+        <h5 className="text-center text-muted">Your cart is empty</h5>
+      ) : (
+        <table className="table table-bordered text-center">
+          <thead className="table-dark">
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Price (₹)</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cartItems.map((item) => (
+              <tr key={item._id}>
+                <td>
+                  <img
+                    src={item.product?.image || "https://via.placeholder.com/70"}
+                    width="70"
+                    alt={item.product?.pname || "Product"}
+                  />
+                </td>
+                <td>{item.product?.pname || "Product"}</td>
+                <td>₹{item.product?.price || 0}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                  >
+                    -
+                  </button>
+                  <span className="mx-2">{item.quantity}</span>
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                  >
+                    +
+                  </button>
+                </td>
+                <td>₹{(item.product?.price || 0) * item.quantity}</td>
+                <td>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => removeItem(item._id)}
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {cartItems.length > 0 && (
+        <h3 className="text-end">Grand Total: ₹{totalPrice}</h3>
+      )}
     </div>
   );
 }

@@ -27,7 +27,7 @@ function GetproductBycategory() {
     }
   return (
     <>
-          <div className="container py-5">
+          <div className="container py-5 bg-black">
       <h2 className="text-center mb-5 text-primary fw-bold text-uppercase">
         {category} Products
       </h2>
@@ -39,6 +39,8 @@ function GetproductBycategory() {
           {formData.map((e, index) => (
             <div
               className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch"
+              onClick={() => navigate(`/product/${e._id}`, { state: { product: e } })}
+              style={{ cursor: "pointer" }}
               key={index}
             >
               <div className="card product-card shadow-sm border-0 w-100 rounded-4 overflow-hidden">
@@ -62,12 +64,12 @@ function GetproductBycategory() {
                     <h6 className="fw-bold text-success mb-3">
                      ₹{e.price.toLocaleString()}
                     </h6>
-                    <button className="btn btn-primary rounded-pill px-4" onClick={login}>
+                    {/* <button className="btn btn-primary rounded-pill px-4" onClick={login}>
                       Buy Now
                     </button>
                      <button className="btn btn-secondary rounded-pill px-4" onClick={login}>
                       ADD TO CART
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>

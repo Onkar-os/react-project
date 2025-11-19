@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 function ProductDetails() {
   const { state } = useLocation();
@@ -8,11 +9,31 @@ function ProductDetails() {
 
   const product = state?.product;
 
+  const handleAddToCart = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/cart/add", {
+        productId: product._id,   // ✅ FIXED
+        quantity: 1,
+      });
+
+      alert(`${product.pname} has been added to your cart!`);
+
+      // Redirect to correct cart page
+      navigate("/cart");   // ✅ FIXED
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Failed to add product to cart!");
+    }
+  };
+
   if (!product) {
     return (
       <div className="container text-center mt-5">
         <h4>Product not found!</h4>
-        <button className="btn btn-secondary mt-3" onClick={() => navigate("/")}>
+        <button
+          className="btn btn-secondary mt-3"
+          onClick={() => navigate("/allproducts")}
+        >
           Back to Home
         </button>
       </div>
@@ -39,11 +60,15 @@ function ProductDetails() {
           <div className="mt-4 d-flex gap-3">
             <button
               className="btn btn-warning fw-semibold text-dark"
-              onClick={() => navigate(`/addtocart/${id}`, { state: { product } })}
+              onClick={handleAddToCart}
             >
               Add to Cart
             </button>
-            <button className="btn btn-outline-dark fw-semibold" onClick={() => navigate("/allproducts")}>
+
+            <button
+              className="btn btn-outline-dark fw-semibold"
+              onClick={() => navigate("/allproducts")}
+            >
               Back to Home
             </button>
           </div>

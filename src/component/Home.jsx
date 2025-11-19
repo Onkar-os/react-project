@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./External.css";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Home() {
   const apiurl = "http://localhost:3000";
@@ -22,28 +23,29 @@ function Home() {
     }
   }
 
-  async function Handledelete(obj) {
-    try {
-      await axios.delete(`${apiurl}/${obj._id}`);
-      alert("Record deleted successfully");
-      setData(data.filter((e) => e._id !== obj._id));
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async function Handledelete(obj) {
+  //   try {
+  //     await axios.delete(`${apiurl}/${obj._id}`);
+  //     alert("Record deleted successfully");
+  //     setData(data.filter((e) => e._id !== obj._id));
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-5 fw-bold text-amazon">Featured Products</h2>
-      <div className="row justify-content-center">
+    <div className=" container-fluid mt-4 px-2 bg-black">
+      <h2 className=" text-center mb-2 fw-bold text-amazon">Featured Products</h2>
+      <div className=" row justify-content-center bg-black">
         {data.map((e, index) => (
-          <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4" key={index}>
+          <div className=" col-xl-3 col-lg col-md-2 col-sm-6 mb-2 " key={index}>
             <div
-              className="card amazon-card h-100 border-0"
+              className=" card amazon-card h-100 border-0 "
               onClick={() => navigate(`/product/${e._id}`, { state: { product: e } })}
               style={{ cursor: "pointer" }}
             >
-              <div className="image-container">
+              <div className=" image-container ">
                 <img
                   src={e.image || "https://via.placeholder.com/150"}
                   className="card-img-top"
@@ -51,12 +53,12 @@ function Home() {
                 />
               </div>
 
-              <div className="card-body text-start px-3">
+              <div className=" card-body text-start px-3 ">
                 <h6 className="fw-semibold product-name">{e.pname}</h6>
                 <p className="text-success fw-bold mb-1">₹{e.price}</p>
-                <p className="text-muted small">{e.description}</p>
+                {/* <p className="text-muted small">{e.description}</p> */}
                  <div className="d-flex justify-content-center gap-2 mt-2">
-              <button
+              {/* <button
                 className="btn btn-warning w-50 fw-semibold text-dark shadow-sm"
                 onClick={() => navigate(`/login`)}
               >
@@ -70,7 +72,7 @@ function Home() {
                 }
               >
                 Add to Cart
-              </button>
+              </button> */}
             </div>
               </div>
             </div>

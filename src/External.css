@@ -3,14 +3,14 @@
 /* Title Gradient */
 .text-amazon {
   font-size: 2rem;
-  background: linear-gradient(90deg, #232f3e, #febd69);
+  background: linear-gradient(90deg, #678ebd, #febd69);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* Card styling */
 .amazon-card {
-  background: #fff;
+  background-color: #c2b575;
   border-radius: 10px;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -28,7 +28,7 @@
 /* Image Container */
 .image-container {
   overflow: hidden;
-  background: #f8f9fa;
+  background: #c5be3d;
   display: flex;
   justify-content: center;
   align-items: center;
