@@ -88,3 +88,100 @@
     font-size: 0.9rem;
   }
 }
+/* GLOBAL STYLES & BACKGROUND */
+body {
+    /* Set a neutral dark background for the whole page */
+    background-color: #0F1111; 
+}
+
+/* FEATURED PRODUCTS HEADING */
+.text-amazon {
+    /* Amazon orange color */
+    color: #FF9900; 
+    font-size: 2.5rem;
+    padding-top: 1.5rem;
+    margin-bottom: 2rem !important;
+}
+
+/* PRODUCT CARD STYLING */
+.amazon-card {
+    /* White background for the card content */
+    background-color: #ffffff; 
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden; 
+}
+
+.amazon-card:hover {
+    /* Hover effect: lift and slightly stronger shadow */
+    box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+}
+
+/* IMAGE CONTAINER: CRITICAL FOR UNIFORMITY */
+.image-container {
+    /* Fixed height for all images to ensure a uniform grid */
+    height: 250px; 
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 15px; /* Padding inside the image box */
+    background-color: white; 
+}
+
+.image-container img {
+    /* Ensures image fits perfectly without distortion or cutting */
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain; 
+    transition: transform 0.5s ease;
+}
+
+.amazon-card:hover .image-container img {
+    /* Subtle zoom effect on image hover */
+    transform: scale(1.05);
+}
+
+
+/* CARD BODY / TEXT DETAILS */
+.card-body {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+.product-name {
+    /* Truncate long product names to a single line */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    color: #0F1111;
+}
+
+/* CUSTOM BUTTON STYLING */
+
+/* Buy Now Button */
+.btn-amazon-primary {
+    background-color: #FFD814; /* Light Amazon yellow */
+    border-color: #FFD814;
+    color: #0F1111;
+}
+.btn-amazon-primary:hover {
+    background-color: #F7CA00; /* Darker yellow on hover */
+    border-color: #F7CA00;
+    color: #0F1111;
+}
+
+/* Add to Cart Button */
+.btn-amazon-outline {
+    border: 1px solid #FF9900; /* Amazon orange border */
+    color: #FF9900;
+    background-color: white;
+}
+.btn-amazon-outline:hover {
+    background-color: #FF9900;
+    color: white;
+}
