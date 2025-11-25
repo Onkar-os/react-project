@@ -2,38 +2,39 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function GetproductBycategory() {
+function GetproductBycategory({ isLoggedIn }) {
   const [formData, setformData] = useState([]);
   const { category } = useParams();
   const navigate = useNavigate();
   const apiurl = "http://localhost:3000";
 
-  // Use useCallback to memoize fetchproducts, preventing unnecessary re-creations
   const fetchproducts = useCallback(async () => {
     try {
-      // Using template literals to inject the category parameter
       const res = await axios.get(`${apiurl}/getcategory/${category}`);
       setformData(res.data.p);
     } catch (error) {
       console.error("Error fetching products:", error);
-      setformData([]); // Set empty if error occurs
+      setformData([]);
     }
-  }, [category, apiurl]); // Dependencies: run when category or apiurl changes
+  }, [category, apiurl]);
 
-  // Corrected useEffect: runs on mount and whenever the 'category' changes
   useEffect(() => {
     fetchproducts();
   }, [fetchproducts]);
 
-  function login(ev) {
-    ev.stopPropagation(); // Prevent card navigation
-    navigate("/login");
+  // Updated Buy Now logic
+  function handleBuyNow(ev, product) {
+    ev.stopPropagation();
+    if (!isLoggedIn) {
+      navigate("/login");
+    } else {
+      navigate(`/checkout/${product._id}`, { state: { product } });
+    }
   }
 
-  // Function to handle Add to Cart click
   function handleAddToCart(ev, product) {
-    ev.stopPropagation(); // Prevent card navigation
-    navigate(`/addtocart/${product._id}`, { state: { product: product } });
+    ev.stopPropagation();
+    navigate(`/addtocart/${product._id}`, { state: { product } });
   }
 
   return (
@@ -143,10 +144,10 @@ function GetproductBycategory() {
                     </h6>
 
                     <div className="d-flex justify-content-center gap-2">
-                      {/* Buy Now Button */}
+                      {/* Buy Now */}
                       <button
                         className="btn fw-semibold btn-sm w-50"
-                        onClick={login}
+                        onClick={(ev) => handleBuyNow(ev, e)}
                         style={{
                           backgroundColor: "#FFD814",
                           borderColor: "#FFD814",
@@ -163,7 +164,7 @@ function GetproductBycategory() {
                         Buy Now
                       </button>
 
-                      {/* Add to Cart Button */}
+                      {/* Add to Cart */}
                       <button
                         className="btn fw-semibold btn-sm w-50"
                         onClick={(ev) => handleAddToCart(ev, e)}

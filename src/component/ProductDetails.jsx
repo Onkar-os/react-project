@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -6,33 +6,31 @@ function ProductDetails() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
+  const product = state?.product;
 
-  const product = state?.product; // --- Custom Theme Colors ---
+  const primaryColor = "#FF9900"; 
+  const darkBg = "#0F1111"; 
+  const textColor = "#EEEEEE"; 
+  const cardBgColor = "#222222"; 
 
-  const primaryColor = "#FF9900"; // Amazon Orange
-  const darkBg = "#0F1111"; // Deep Black/Dark Gray
-  const textColor = "#EEEEEE"; // Light text color
-  const cardBgColor = "#222222"; // Dark grey for details box
+  const [isImageOpen, setIsImageOpen] = useState(false);
 
   const handleAddToCart = async () => {
     try {
-      // Assuming you need a logged-in user check before adding to cart
       if (!localStorage.getItem("isLoggedIn")) {
         alert("Please log in to add items to your cart.");
         navigate("/login");
         return;
       }
-      const res = await axios.post("http://localhost:3000/cart/add", {
+      await axios.post("http://localhost:3000/cart/add", {
         productId: product._id,
         quantity: 1,
       });
-
-      alert(`✅ ${product.pname} has been added to your cart!`); // Redirect to correct cart page
-
+      alert(`✅ ${product.pname} has been added to your cart!`);
       navigate("/cart");
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("❌ Failed to add product to cart! Ensure the server is running.");
+      alert("❌ Failed to add product to cart!");
     }
   };
 
@@ -47,19 +45,14 @@ function ProductDetails() {
           color: textColor,
         }}
       >
-               {" "}
-        <h4 className="text-warning">
-          Product not found! Data may have been loaded incorrectly.
-        </h4>
-               {" "}
+        <h4 className="text-warning">Product not found!</h4>
         <button
           className="btn fw-semibold mt-3"
           style={{ backgroundColor: primaryColor, color: "black" }}
           onClick={() => navigate("/allproducts")}
         >
-                    Back to Home        {" "}
+          Back to Home
         </button>
-             {" "}
       </div>
     );
   }
@@ -74,16 +67,13 @@ function ProductDetails() {
         paddingTop: "80px",
       }}
     >
-           {" "}
       <div className="row justify-content-center">
-                        {/* Image Column */}       {" "}
+        {/* Image Column */}
         <div className="col-md-5 text-center mb-4 mb-md-0">
-                   {" "}
           <div
             className="p-3 rounded shadow-lg"
             style={{ backgroundColor: cardBgColor }}
           >
-                       {" "}
             <img
               src={product.image || "https://via.placeholder.com/300"}
               alt={product.pname}
@@ -92,35 +82,30 @@ function ProductDetails() {
                 maxHeight: "400px",
                 objectFit: "contain",
                 width: "100%",
+                cursor: "pointer",
               }}
+              onClick={() => setIsImageOpen(true)}
             />
-                     {" "}
           </div>
-                 {" "}
         </div>
-                {/* Details Column */}       {" "}
+
+        {/* Details Column */}
         <div className="col-md-5">
-                   {" "}
           <div
             className="p-4 rounded shadow-lg"
             style={{ backgroundColor: cardBgColor }}
           >
-                                    {/* Product Name */}           {" "}
             <h2 className="fw-bold mb-3" style={{ color: primaryColor }}>
               {product.pname}
             </h2>
-                                    {/* Price */}           {" "}
             <h4 className="fw-bold mb-3" style={{ color: "#00A650" }}>
-                            ₹{product.price.toLocaleString()}           {" "}
+              ₹{product.price.toLocaleString()}
             </h4>
-                                    {/* Description */}           {" "}
             <p className="mb-4" style={{ color: textColor }}>
-                            {product.description}           {" "}
+              {product.description}
             </p>
-                        <hr style={{ borderColor: "#444" }} />           {" "}
-            {/* Action Buttons */}           {" "}
+            <hr style={{ borderColor: "#444" }} />
             <div className="mt-4 d-grid gap-3 d-md-flex">
-                            {/* Add to Cart Button */}             {" "}
               <button
                 className="btn fw-semibold text-dark"
                 style={{
@@ -130,9 +115,8 @@ function ProductDetails() {
                 }}
                 onClick={handleAddToCart}
               >
-                                🛒 Add to Cart              {" "}
+                🛒 Add to Cart
               </button>
-                            {/* Back to Home Button */}             {" "}
               <button
                 className="btn fw-semibold"
                 style={{
@@ -143,17 +127,43 @@ function ProductDetails() {
                 }}
                 onClick={() => navigate("/allproducts")}
               >
-                                🏠 Back to Home              {" "}
+                🏠 Back to Home
               </button>
-                         {" "}
             </div>
-                     {" "}
           </div>
-                 {" "}
         </div>
-             {" "}
       </div>
-         {" "}
+
+      {/* Fullscreen Image Modal */}
+      {isImageOpen && (
+        <div
+          onClick={() => setIsImageOpen(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.9)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            cursor: "zoom-out",
+          }}
+        >
+          <img
+            src={product.image || "https://via.placeholder.com/300"}
+            alt={product.pname}
+            style={{
+              maxWidth: "90%",
+              maxHeight: "90%",
+              objectFit: "contain",
+              borderRadius: "8px",
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

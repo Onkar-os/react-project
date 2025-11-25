@@ -44,9 +44,21 @@ function Home({ searchQuery = "", isLoggedIn }) {
     }
   }
 
-  function handleAddToCart(ev, product) {
+  async function handleAddToCart(ev, product) {
     ev.stopPropagation();
-    navigate(`/addtocart/${product._id}`, { state: { product } });
+
+    try {
+      const res = await axios.post("http://localhost:3000/cart/add", {
+        productId: product._id,
+      });
+
+      if (res.status === 200) {
+        alert("Product added to cart!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add to cart");
+    }
   }
 
   return (

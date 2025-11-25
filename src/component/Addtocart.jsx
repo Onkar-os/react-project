@@ -3,14 +3,12 @@ import axios from "axios";
 
 function Addtocart() {
   const [cartItems, setCartItems] = useState([]);
-
   const apiUrl = "http://localhost:3000/cart";
 
-  // FETCH CART ITEMS
   const fetchCart = async () => {
     try {
       const { data } = await axios.get(apiUrl);
-      setCartItems(data.items); // ✅ match backend response key
+      setCartItems(data.items || []);
     } catch (error) {
       console.error("Error fetching cart:", error);
     }
@@ -20,29 +18,26 @@ function Addtocart() {
     fetchCart();
   }, []);
 
-  // UPDATE QUANTITY
   const updateQuantity = async (id, qty) => {
-    if (qty < 1) return; // prevent quantity < 1
+    if (qty < 1) return;
 
     try {
-      await axios.put(`http://localhost:3000/cart/update/${id}`, { quantity: qty }); // ✅ fixed route
-      fetchCart(); // refresh cart after update
+      await axios.put(`http://localhost:3000/cart/update/${id}`, { quantity: qty });
+      fetchCart();
     } catch (error) {
       console.error("Quantity update failed:", error);
     }
   };
 
-  // REMOVE ITEM
   const removeItem = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/cart/delete/${id}`); // ✅ fixed route
+      await axios.delete(`http://localhost:3000/cart/delete/${id}`);
       setCartItems((prev) => prev.filter((item) => item._id !== id));
     } catch (error) {
       console.error("Delete failed:", error);
     }
   };
 
-  // CALCULATE TOTAL PRICE
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + (item.product?.price || 0) * item.quantity,
     0
@@ -76,22 +71,18 @@ function Addtocart() {
                     alt={item.product?.pname || "Product"}
                   />
                 </td>
-                <td>{item.product?.pname || "Product"}</td>
-                <td>₹{item.product?.price || 0}</td>
+                <td>{item.product?.pname}</td>
+                <td>₹{item.product?.price}</td>
                 <td>
                   <button
                     className="btn btn-sm btn-secondary"
                     onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                  >
-                    -
-                  </button>
+                  >-</button>
                   <span className="mx-2">{item.quantity}</span>
                   <button
                     className="btn btn-sm btn-secondary"
                     onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                  >
-                    +
-                  </button>
+                  >+</button>
                 </td>
                 <td>₹{(item.product?.price || 0) * item.quantity}</td>
                 <td>
