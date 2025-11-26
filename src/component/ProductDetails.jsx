@@ -14,6 +14,15 @@ function ProductDetails() {
   const cardBgColor = "#222222"; 
 
   const [isImageOpen, setIsImageOpen] = useState(false);
+function handleBuyNow(ev, product) {
+  ev.stopPropagation();
+  const isLoggedIn = localStorage.getItem("isLoggedIn"); // check login from localStorage
+  if (!isLoggedIn) {
+    navigate("/login");
+  } else {
+    navigate(`/checkout/${product._id}`, { state: { product } });
+  }
+}
 
   const handleAddToCart = async () => {
     try {
@@ -129,24 +138,21 @@ function ProductDetails() {
               >
                 🏠 Back to Home
               </button>
-              <button
-    className="btn w-50 fw-semibold text-dark shadow-sm"
-    style={{
-      backgroundColor: "#FFD814",
-      borderColor: "#FFD814",
-      padding: "10px 30px",
-      transition: "all 0.3s",
-    }}
-    onMouseOver={(el) =>
-      (el.currentTarget.style.backgroundColor = "#F7CA00")
-    }
-    onMouseOut={(el) =>
-      (el.currentTarget.style.backgroundColor = "#FFD814")
-    }
-    onClick={() => navigate(`/checkout/${product._id}`, { state: { product } })}
-  >
-    ⚡ Buy Now
-  </button>
+             <button
+  className="btn btn-amazon-primary w-50 fw-semibold text-dark shadow-sm btn-sm"
+  style={{
+    backgroundColor: "#FFD814",
+    borderColor: "#FFD814",
+    color: "#0F1111",
+    transition: "all 0.3s",
+  }}
+  onClick={(ev) => handleBuyNow(ev, product)}
+  onMouseOver={(el) => (el.currentTarget.style.backgroundColor = "#F7CA00")}
+  onMouseOut={(el) => (el.currentTarget.style.backgroundColor = "#FFD814")}
+>
+  Buy Now
+</button>
+
             </div>
           </div>
         </div>
