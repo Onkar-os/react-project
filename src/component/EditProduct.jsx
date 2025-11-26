@@ -1,130 +1,122 @@
-import axios from 'axios'
-import React, { useEffect } from 'react'
-import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Navigate } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 function EditProduct() {
-    const navigate=useNavigate()
-     const[formData,setformData]=useState({
-            pname:" ",
-            price:"",
-            category:"",
-            stock:"",
-            image:"",
-            description:""
-        })
+  const navigate = useNavigate();
+  const { _id } = useParams();
 
-    const apiurl="http://localhost:3000"
-    const {id}=useParams()
+  const [formData, setFormData] = useState({
+    pname: "",
+    price: "",
+    category: "",
+    stock: "",
+    orderDate: "",
+    description: "",
+    images: [],
+  });
 
-    useEffect(()=>{
-         fetchproducts()
-    },[])
+  // Check admin
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      alert("⚠️ Admin login required!");
+      navigate("/admin/login");
+    }
+    fetchProduct();
+  }, [_id]);
 
-   async function fetchproducts(){
-    await axios.get(`${apiurl}/${id}`).then((res)=>{
-        setformData(res.data.p)
-    })
-   }
+  const fetchProduct = async () => {
+    try {
+      const res = await axios.get(`http://localhost:3000/api/products/${_id}`);
+      const product = res.data;
 
-  async function handleSubmit(e){
-    e.preventDefault()
-      await axios.put(`${apiurl}/${id}`,formData).then((res)=>{
-        navigate('/allproducts')
-      })
-   }
-   function handleChange(e){
-       setformData({...formData,[e.target.name]:e.target.value})
-   }
+      setFormData({
+        pname: product.pname,
+        price: product.price,
+        category: product.category,
+        stock: product.stock.toString(),
+        orderDate: product.orderDate?.split("T")[0] || "",
+        description: product.description,
+        images: product.images || [],
+      });
+    } catch (err) {
+      alert("❌ Failed to fetch product!");
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "images") {
+      setFormData({
+        ...formData,
+        images: value.split(",").map((img) => img.trim()),
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("adminToken");
+
+    try {
+      await axios.put(
+        `http://localhost:3000/api/products/${_id}`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      alert("✅ Product updated!");
+      navigate("/admin/edit-product-list");
+    } catch (err) {
+      alert("❌ Failed to update product!");
+    }
+  };
 
   return (
-   <div className="container mt-5">
+    <div className="container mt-5">
+      <h2>Edit Product</h2>
 
-      <h2 className="text-center mb-4">Edit Product</h2>
-      <form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm bg-light">
-        <div className="mb-3">
-          <label className="form-label">Product Name</label>
-          <input
-            type="text"
-            name="pname"
-            value={formData.pname}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter product name"
-            required
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="p-4 border rounded bg-light shadow">
 
-        <div className="mb-3">
-          <label className="form-label">Price</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter price"
-            required
-          />
-        </div>
+        <label>Product Name</label>
+        <input type="text" name="pname" value={formData.pname}
+          onChange={handleChange} className="form-control mb-2" required />
 
-        <div className="mb-3">
-          <label className="form-label">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter category"
-            required
-          />
-        </div>
+        <label>Price</label>
+        <input type="number" name="price" value={formData.price}
+          onChange={handleChange} className="form-control mb-2" required />
 
-        <div className="mb-3">
-          <label className="form-label">Stock</label>
-          <input
-            type="text"
-            name="stock"
-            value={formData.stock}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter stock quantity"
-            required
-          />
-        </div>
+        <label>Category</label>
+        <input type="text" name="category" value={formData.category}
+          onChange={handleChange} className="form-control mb-2" required />
 
-        <div className="mb-3">
-          <label className="form-label">description</label>
-          <input
-            type="text"
-            name="Description"
-            value={formData.Description}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Product Image URL</label>
-          <input
-            type="text"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter image URL"
-            required
-          />
-        </div>
+        <label>Stock</label>
+        <select name="stock" value={formData.stock}
+          onChange={handleChange} className="form-control mb-2">
+          <option value="true">In Stock</option>
+          <option value="false">Out of Stock</option>
+        </select>
 
-        <button type="submit" className="btn btn-primary w-100">
-          Edit Product
-        </button>
+        <label>Order Date</label>
+        <input type="date" name="orderDate" value={formData.orderDate}
+          onChange={handleChange} className="form-control mb-2" required />
+
+        <label>Description</label>
+        <textarea name="description" value={formData.description}
+          onChange={handleChange} className="form-control mb-2"></textarea>
+
+        <label>Images (comma separated)</label>
+        <input type="text" name="images" value={formData.images.join(", ")}
+          onChange={handleChange} className="form-control mb-2" />
+
+        <button className="btn btn-primary w-100">Update Product</button>
       </form>
     </div>
-  )
+  );
 }
 
-export default EditProduct
+export default EditProduct;

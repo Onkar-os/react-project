@@ -129,6 +129,24 @@ function ProductDetails() {
               >
                 🏠 Back to Home
               </button>
+              <button
+    className="btn w-50 fw-semibold text-dark shadow-sm"
+    style={{
+      backgroundColor: "#FFD814",
+      borderColor: "#FFD814",
+      padding: "10px 30px",
+      transition: "all 0.3s",
+    }}
+    onMouseOver={(el) =>
+      (el.currentTarget.style.backgroundColor = "#F7CA00")
+    }
+    onMouseOut={(el) =>
+      (el.currentTarget.style.backgroundColor = "#FFD814")
+    }
+    onClick={() => navigate(`/checkout/${product._id}`, { state: { product } })}
+  >
+    ⚡ Buy Now
+  </button>
             </div>
           </div>
         </div>

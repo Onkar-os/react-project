@@ -1,139 +1,79 @@
-import axios from 'axios'
-import React, { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Addproduct() {
-    const navigate=useNavigate()
-    const[formData,setformData]=useState({
-        pname:" ",
-        price:"",
-        category:"",
-        stock:"",
-        orderDate: "",
-        image:"",
-        description:""
-    })
+  const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    pname: "",
+    price: "",
+    category: "",
+    stock: "",
+    orderDate: "",
+    description: "",
+    images: "",
+  });
 
-    function handleChange(e){
-        setformData({...formData,[e.target.name]:e.target.value})
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("adminToken");
+    const payload = {
+      ...formData,
+      images: formData.images.split(",").map((img) => img.trim()),
+    };
+
+    try {
+      await axios.post("http://localhost:3000/api/products", payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      alert("✅ Product added!");
+      navigate("/admin/dashboard");
+    } catch (err) {
+      alert("❌ Error adding product!");
     }
+  };
 
-    async function handleSubmit(e){
-        e.preventDefault()
-
-        await axios.post("http://localhost:3000",formData).then((res)=>{
-          alert("product added sucesfullly")
-        })
-    }
-    function submithandler(){
-        navigate('/allproducts')
-    }
   return (
-    <>
-       
     <div className="container mt-5">
+      <h2>Add Product</h2>
 
-      <h2 className="text-center mb-4">Add Product</h2>
-      <form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm bg-light">
-        <div className="mb-3">
-          <label className="form-label">Product Name</label>
-          <input
-            type="text"
-            name="pname"
-            value={formData.pname}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter product name"
-            required
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="p-4 border rounded bg-light shadow">
 
-        <div className="mb-3">
-          <label className="form-label">Price</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter price"
-            required
-          />
-        </div>
+        <input type="text" name="pname" onChange={handleChange}
+          placeholder="Product Name" className="form-control mb-2" required />
 
-        <div className="mb-3">
-          <label className="form-label">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter category"
-            required
-          />
-        </div>
+        <input type="number" name="price" onChange={handleChange}
+          placeholder="Price" className="form-control mb-2" required />
 
-       <div className="mb-3">
-  <label className="form-label">Stock</label>
-  <select
-    name="stock"
-    value={formData.stock}
-    onChange={handleChange}
-    className="form-control"
-    required
-  >
-    <option value="">-- Select Availability --</option>
-    <option value="true">In Stock</option>
-    <option value="false">Out of Stock</option>
-  </select>
-</div>
-        <div className="mb-3">
-          <label className="form-label">orderdate</label>
-          <input
-            type="date"
-            name="orderDate"
-            value={formData.orderDate}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter order date "
-            required
-          />
-        </div>
+        <input type="text" name="category" onChange={handleChange}
+          placeholder="Category" className="form-control mb-2" required />
 
+        <select name="stock" onChange={handleChange} className="form-control mb-2" required>
+          <option value="">-- Select Stock --</option>
+          <option value="true">In Stock</option>
+          <option value="false">Out of Stock</option>
+        </select>
 
-        <div className="mb-3">
-          <label className="form-label">description</label>
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Product Image URL</label>
-          <input
-            type="text"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            className="form-control"
-            placeholder="Enter image URL"
-            required
-          />
-        </div>
+        <input type="date" name="orderDate" onChange={handleChange}
+          className="form-control mb-2" required />
 
-        <button type="submit" className="btn btn-primary w-100" onClick={submithandler}>
-          Add Product
-        </button>
+        <textarea name="description" onChange={handleChange}
+          placeholder="Description" className="form-control mb-2" required />
+
+        <input type="text" name="images" onChange={handleChange}
+          placeholder="Image1, Image2 ..." className="form-control mb-2" required />
+
+        <button className="btn btn-primary w-100">Add Product</button>
       </form>
     </div>
-    </>
-  )
+  );
 }
 
-export default Addproduct
+export default Addproduct;
