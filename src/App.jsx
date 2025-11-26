@@ -105,8 +105,8 @@ function App() {
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Addtocart />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/checkout/:id" element={<Checkout />} />
+          <Route path="/product/:_id" element={<ProductDetails />} />
+          <Route path="/checkout/:_id" element={<Checkout />} />
         </Routes>
       </div>
 
