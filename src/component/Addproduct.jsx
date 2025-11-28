@@ -15,6 +15,8 @@ function Addproduct() {
     images: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -22,21 +24,60 @@ function Addproduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // quick checks
     const token = localStorage.getItem("adminToken");
+    if (!token) {
+      return alert("No admin token found. Please login as admin.");
+    }
+
+    // prepare payload with proper types
     const payload = {
-      ...formData,
-      images: formData.images.split(",").map((img) => img.trim()),
+      pname: formData.pname.trim(),
+      price: Number(formData.price), // convert to number
+      category: formData.category.trim(),
+      stock: formData.stock === "true", // convert to boolean
+      orderDate: formData.orderDate || null,
+      // include `date` too because some backends expect `date`
+      date: formData.orderDate || null,
+      description: formData.description.trim(),
+      images: formData.images
+        ? formData.images.split(",").map((img) => img.trim())
+        : [],
     };
 
+    console.log("Prepared payload:", payload);
+
+    setLoading(true);
     try {
-      await axios.post("http://localhost:3000/api/products", payload, {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await axios.post("http://localhost:3000/api/products", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
+      console.log("Server response:", res.data);
       alert("✅ Product added!");
       navigate("/admin/dashboard");
     } catch (err) {
-      alert("❌ Error adding product!");
+      console.error("Add product error:", err);
+
+      // helpful alerts/logs so you know exactly what failed
+      if (err.response) {
+        // server returned a response (likely 4xx or 5xx)
+        console.error("Response data:", err.response.data);
+        console.error("Status:", err.response.status);
+        alert(`❌ Server error: ${err.response.data.message || JSON.stringify(err.response.data)}`);
+      } else if (err.request) {
+        // request made but no response
+        console.error("No response received:", err.request);
+        alert("❌ No response from server. Is the backend running and CORS set up?");
+      } else {
+        // something else
+        alert(`❌ Error: ${err.message}`);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +111,9 @@ function Addproduct() {
         <input type="text" name="images" onChange={handleChange}
           placeholder="Image1, Image2 ..." className="form-control mb-2" required />
 
-        <button className="btn btn-primary w-100">Add Product</button>
+        <button className="btn btn-primary w-100" disabled={loading}>
+          {loading ? "Adding..." : "Add Product"}
+        </button>
       </form>
     </div>
   );

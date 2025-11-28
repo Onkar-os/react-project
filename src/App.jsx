@@ -12,15 +12,15 @@ import Checkout from "./component/Checkout";
 import Addproduct from "./component/Addproduct";
 import AdminLogin from "./component/AdminLogin";
 import AdminDashboard from "./component/AdminDashboard";
-import EditProduct from "./component/EditProduct";      // ⭐ Add this
-import EditProductList from "./component/EditProductList"; 
+import EditProduct from "./component/EditProduct";
+import EditProductList from "./component/EditProductList";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  // Load login/admin status on refresh
   useEffect(() => {
     const loginStatus = localStorage.getItem("isLoggedIn");
     if (loginStatus === "true") setIsLoggedIn(true);
@@ -29,7 +29,6 @@ function App() {
     if (token) setIsAdmin(true);
   }, []);
 
-  // Logout
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("adminToken");
@@ -38,8 +37,8 @@ function App() {
     navigate("/login");
   };
 
-  // Search
   const handleSearchChange = (e) => setSearchQuery(e.target.value);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     navigate("/allproducts");
@@ -50,7 +49,6 @@ function App() {
 
   return (
     <>
-      {/* Navbar */}
       <header style={{ width: "100%", position: "fixed", top: 0, left: 0, zIndex: 1000 }}>
         <nav className="navbar navbar-expand-lg w-100" style={{ backgroundColor: darkBg }}>
           <div className="container-fluid">
@@ -62,12 +60,10 @@ function App() {
             <div className="d-flex align-items-center">
               <ul className="navbar-nav flex-row me-auto mb-2 mb-lg-0">
 
-                {/* Home */}
                 <li className="nav-item me-3">
                   <Link className="nav-link active text-white" to="/allproducts">Home</Link>
                 </li>
 
-                {/* ⭐ ADMIN LINKS ⭐ */}
                 {isAdmin && (
                   <>
                     <li className="nav-item me-3">
@@ -75,30 +71,26 @@ function App() {
                         Add Product
                       </Link>
                     </li>
-
-                    <li className="nav-item me-3">
-                      <Link className="nav-link active text-white" to="/admin/edit-product-list">
-                        Edit Products
-                      </Link>
-                    </li>
                   </>
                 )}
 
-                {/* Category Dropdown */}
                 <li className="nav-item dropdown me-3">
-                  <a className="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">Category</a>
-                  <ul className="dropdown-menu dropdown-menu-dark"
-                    style={{ backgroundColor: '#222', border: `1px solid ${primaryColor}` }}>
+                  <a className="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">
+                    Category
+                  </a>
+                  <ul
+                    className="dropdown-menu dropdown-menu-dark"
+                    style={{ backgroundColor: "#222", border: `1px solid ${primaryColor}` }}
+                  >
                     <li><Link className="dropdown-item text-white" to="/Electronics">Electronics</Link></li>
                     <li><Link className="dropdown-item text-white" to="/Fashion">Fashion</Link></li>
                     <li><Link className="dropdown-item text-white" to="/Clothing">Clothing</Link></li>
-                    <li><hr className="dropdown-divider" style={{ borderColor: '#555' }} /></li>
+                    <li><hr className="dropdown-divider" style={{ borderColor: "#555" }} /></li>
                     <li><Link className="dropdown-item text-white" to="/Home Appliances">Home Appliances</Link></li>
                     <li><Link className="dropdown-item text-white" to="/others">Other products</Link></li>
                   </ul>
                 </li>
 
-                {/* Login / Register / Admin Login */}
                 {!isLoggedIn && !isAdmin ? (
                   <>
                     <li className="nav-item me-3">
@@ -127,7 +119,6 @@ function App() {
                   </li>
                 )}
 
-                {/* Cart */}
                 {!isAdmin && (
                   <li className="nav-item me-3">
                     <Link className="nav-link text-white" to="/cart">
@@ -137,7 +128,6 @@ function App() {
                 )}
               </ul>
 
-              {/* Search Bar */}
               {!isAdmin && (
                 <form className="d-flex ms-3" role="search" onSubmit={handleSearchSubmit}>
                   <input
@@ -148,13 +138,16 @@ function App() {
                       width: "180px",
                       backgroundColor: "#333",
                       color: "white",
-                      border: `1px solid ${primaryColor}`
+                      border: `1px solid ${primaryColor}`,
                     }}
                     value={searchQuery}
                     onChange={handleSearchChange}
                   />
-                  <button className="btn btn-sm fw-bold" type="submit"
-                    style={{ backgroundColor: primaryColor, color: "black" }}>
+                  <button
+                    className="btn btn-sm fw-bold"
+                    type="submit"
+                    style={{ backgroundColor: primaryColor, color: "black" }}
+                  >
                     Search
                   </button>
                 </form>
@@ -164,33 +157,39 @@ function App() {
         </nav>
       </header>
 
-      {/* ROUTES */}
       <div style={{ paddingTop: "56px", minHeight: "calc(100vh - 120px)", backgroundColor: darkBg }}>
         <Routes>
 
-          {/* USER ROUTES */}
-          <Route path="/" element={<Home searchQuery={searchQuery} isLoggedIn={isLoggedIn} />} />
-          <Route path="/allproducts" element={<Home searchQuery={searchQuery} isLoggedIn={isLoggedIn} />} />
-          <Route path="/:category" element={<GetproductBycategory searchQuery={searchQuery} isLoggedIn={isLoggedIn} />} />
+          <Route
+            path="/"
+            element={<Home searchQuery={searchQuery} isLoggedIn={isLoggedIn} isAdmin={isAdmin} />}
+          />
+
+          <Route
+            path="/allproducts"
+            element={<Home searchQuery={searchQuery} isLoggedIn={isLoggedIn} isAdmin={isAdmin} />}
+          />
+
+          <Route
+            path="/:category"
+            element={<GetproductBycategory searchQuery={searchQuery} isLoggedIn={isLoggedIn} />}
+          />
+
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Addtocart />} />
           <Route path="/product/:_id" element={<ProductDetails />} />
           <Route path="/checkout/:_id" element={<Checkout />} />
 
-          {/* ADMIN LOGIN */}
           <Route path="/admin/login" element={<AdminLogin setIsAdmin={setIsAdmin} />} />
 
-          {/* ⭐ ADMIN PROTECTED ROUTES ⭐ */}
           {isAdmin && <Route path="/admin/dashboard" element={<AdminDashboard />} />}
           {isAdmin && <Route path="/admin/add-product" element={<Addproduct />} />}
           {isAdmin && <Route path="/admin/edit-product-list" element={<EditProductList />} />}
           {isAdmin && <Route path="/admin/edit-product/:id" element={<EditProduct />} />}
-
         </Routes>
       </div>
 
-      {/* FOOTER */}
       <footer style={{ backgroundColor: darkBg, color: primaryColor }} className="text-center py-3">
         © 2025 MY STORE
       </footer>

@@ -1,28 +1,28 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react"; 
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function GetproductBycategory({ isLoggedIn }) {
-  const [formData, setformData] = useState([]);
+  const [products, setProducts] = useState([]);
   const { category } = useParams();
   const navigate = useNavigate();
-  const apiurl = "http://localhost:3000";
+  const API_URL = "http://localhost:3000/api"; // fixed
 
-  const fetchproducts = useCallback(async () => {
+  const fetchProducts = useCallback(async () => {
     try {
-      const res = await axios.get(`${apiurl}/getcategory/${category}`);
-      setformData(res.data.p);
+      const res = await axios.get(`${API_URL}/products/category/${category}`);
+      setProducts(res.data); // ✅ res.data is already an array
     } catch (error) {
       console.error("Error fetching products:", error);
-      setformData([]);
+      setProducts([]);
     }
-  }, [category, apiurl]);
+  }, [category]);
 
   useEffect(() => {
-    fetchproducts();
-  }, [fetchproducts]);
+    fetchProducts();
+  }, [fetchProducts]);
 
-  // Updated Buy Now logic
+  // Buy Now logic
   function handleBuyNow(ev, product) {
     ev.stopPropagation();
     if (!isLoggedIn) {
@@ -53,13 +53,13 @@ function GetproductBycategory({ isLoggedIn }) {
         {category} Products
       </h2>
 
-      {formData.length === 0 ? (
+      {products.length === 0 ? (
         <div className="text-center fs-5" style={{ color: "#ccc" }}>
           No products found.
         </div>
       ) : (
         <div className="row g-4 justify-content-center">
-          {formData.map((e, index) => (
+          {products.map((e, index) => (
             <div
               className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch"
               onClick={() =>
@@ -97,22 +97,14 @@ function GetproductBycategory({ isLoggedIn }) {
                     padding: "15px",
                   }}
                 >
-                  <img
-                    src={e.image || "https://via.placeholder.com/250"}
-                    alt={e.pname}
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "100%",
-                      objectFit: "contain",
-                      transition: "transform 0.5s ease",
-                    }}
-                    onMouseOver={(el) =>
-                      (el.currentTarget.style.transform = "scale(1.05)")
-                    }
-                    onMouseOut={(el) =>
-                      (el.currentTarget.style.transform = "scale(1)")
-                    }
-                  />
+                  <div className="image-container">
+  <img
+    src={e.image || "https://via.placeholder.com/250"}  // <- CORRECTED
+    className="card-img-top"
+    alt={e.pname}
+  />
+</div>
+
                 </div>
                 <div
                   className="card-body d-flex flex-column"
@@ -144,7 +136,6 @@ function GetproductBycategory({ isLoggedIn }) {
                     </h6>
 
                     <div className="d-flex justify-content-center gap-2">
-                      {/* Buy Now */}
                       <button
                         className="btn fw-semibold btn-sm w-50"
                         onClick={(ev) => handleBuyNow(ev, e)}
@@ -164,7 +155,6 @@ function GetproductBycategory({ isLoggedIn }) {
                         Buy Now
                       </button>
 
-                      {/* Add to Cart */}
                       <button
                         className="btn fw-semibold btn-sm w-50"
                         onClick={(ev) => handleAddToCart(ev, e)}
