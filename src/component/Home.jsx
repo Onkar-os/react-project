@@ -101,7 +101,7 @@ function Home({ searchQuery = "", isLoggedIn, isAdmin }) {
         ) : (
           filteredData.map((e) => (
             <div
-              className="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4"
+              className="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4 "
               key={e._id}
             >
               <div
@@ -114,10 +114,15 @@ function Home({ searchQuery = "", isLoggedIn, isAdmin }) {
                 <div className="image-container">
                   <div className="image-container">
   <img
-    src={e.image || "https://via.placeholder.com/250"}  // <- CORRECTED
-    className="card-img-top"
-    alt={e.pname}
-  />
+  src={
+    e.images?.[0] ||
+    e.image ||
+    "https://via.placeholder.com/250"
+  }
+  className="card-img-top"
+  alt={e.pname}
+/>
+
 </div>
 
                 </div>
