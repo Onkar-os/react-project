@@ -98,11 +98,15 @@ function GetproductBycategory({ isLoggedIn }) {
                   }}
                 >
                   <div className="image-container">
-  <img
-    src={e.image || "https://via.placeholder.com/250"}  // <- CORRECTED
-    className="card-img-top"
-    alt={e.pname}
-  />
+ <img
+  src={
+    e.images?.[0] ||
+    e.image ||
+    "https://via.placeholder.com/250"
+  }
+  className="card-img-top"
+  alt={e.pname}
+/>
 </div>
 
                 </div>
