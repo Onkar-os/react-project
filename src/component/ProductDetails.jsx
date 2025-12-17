@@ -14,9 +14,10 @@ function ProductDetails() {
   const cardBgColor = "#222222";
 
   const [isImageOpen, setIsImageOpen] = useState(false);
+
   function handleBuyNow(ev, product) {
     ev.stopPropagation();
-    const isLoggedIn = localStorage.getItem("isLoggedIn"); // check login from localStorage
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
     if (!isLoggedIn) {
       navigate("/login");
     } else {
@@ -66,6 +67,11 @@ function ProductDetails() {
     );
   }
 
+  const productImage =
+    product.images && product.images.length > 0
+      ? product.images[0]
+      : "https://via.placeholder.com/300";
+
   return (
     <div
       className="container-fluid py-5"
@@ -84,7 +90,7 @@ function ProductDetails() {
             style={{ backgroundColor: cardBgColor }}
           >
             <img
-              src={product.image || "https://via.placeholder.com/300"}
+              src={productImage}
               alt={product.pname}
               className="img-fluid rounded"
               style={{
@@ -180,7 +186,7 @@ function ProductDetails() {
           }}
         >
           <img
-            src={product.image || "https://via.placeholder.com/300"}
+            src={productImage}
             alt={product.pname}
             style={{
               maxWidth: "90%",
